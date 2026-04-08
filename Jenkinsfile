@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_KEY      = 'student3'
-        PROJECT_NAME     = 'student3'
-        IMAGE_NAME       = 'student3'
-        CONTAINER_NAME   = 'student3'
-        APP_PORT         = '3001'
-        SONAR_HOST_URL   = 'http://192.168.119.129:9000'
+        PROJECT_KEY    = 'student3-vuln-demo'
+        PROJECT_NAME   = 'student3-vuln-demo'
+        IMAGE_NAME     = 'student3-vuln-demo'
+        CONTAINER_NAME = 'student3-vuln-app'
+        APP_PORT       = '3003'
+        SONAR_HOST_URL = 'http://192.168.119.129:9000'
     }
 
     stages {
@@ -32,7 +32,8 @@ pipeline {
 
         stage('Snyk Scan') {
             steps {
-                echo 'Snyk scan stage'
+                sh 'npm audit --audit-level=low || true'
+                echo 'Snyk scan stage placeholder'
             }
         }
 
@@ -58,7 +59,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
+                timeout(time: 10, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
@@ -95,10 +96,10 @@ pipeline {
             echo 'Pipeline finished successfully.'
         }
         failure {
-            echo 'Pipeline failed. Check Console Output and SonarQube.'
+            echo 'Pipeline failed. Review SonarQube and Jenkins logs.'
         }
         always {
-            echo 'Pipeline انتهت.'
+            echo 'Pipeline ended.'
         }
     }
 }
