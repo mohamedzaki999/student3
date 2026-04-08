@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_KEY    = 'student3-python'
-        PROJECT_NAME   = 'student3-python'
-        IMAGE_NAME     = 'student3-python'
-        CONTAINER_NAME = 'student3-python-app'
+        PROJECT_KEY    = 'student3'
+        PROJECT_NAME   = 'student3'
+        IMAGE_NAME     = 'student3'
+        CONTAINER_NAME = 'student3-python'
         APP_PORT       = '3006'
         SONAR_HOST_URL = 'http://192.168.119.129:9000'
     }
@@ -26,7 +26,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip3 install -r requirements.txt'
+                sh 'pip3 install --break-system-packages -r requirements.txt'
             }
         }
 
