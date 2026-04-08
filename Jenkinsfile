@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_KEY    = 'student3-vuln-demo'
-        PROJECT_NAME   = 'student3-vuln-demo'
-        IMAGE_NAME     = 'student3-vuln-demo'
-        CONTAINER_NAME = 'student3-vuln-app'
-        APP_PORT       = '3003'
+        PROJECT_KEY    = 'student3'
+        PROJECT_NAME   = 'student3'
+        IMAGE_NAME     = 'student3'
+        CONTAINER_NAME = 'student3'
+        APP_PORT       = '3005'
         SONAR_HOST_URL = 'http://192.168.119.129:9000'
     }
 
