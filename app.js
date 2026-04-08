@@ -1,44 +1,58 @@
 const express = require('express');
+const app = express();
+const mysql = require('mysql'); // Ensure this is in your package.json
+const fs = require('fs');
 const crypto = require('crypto');
 
-const app = express();
-app.use(express.json());
+// --- 1. SECURITY VULNERABILITIES (The "Missing" Piece) ---
+app.get('/user', (req, res) => {
+    const userId = req.query.id;
+    const connection = mysql.createConnection({host: 'localhost', user: 'root', password: 'password'});
+    
+    // SQL INJECTION: Directly using user input in a query
+    const query = "SELECT * FROM users WHERE id = " + userId; 
+    connection.query(query, (err, result) => { res.send(result); });
 
-// hardcoded secret
-const API_KEY = 'secret-123456';
-const ADMIN_PASSWORD = 'admin123';
-
-app.get('/', (req, res) => {
-  res.send('Hello SonarQube');
+    // PATH TRAVERSAL: Directly using user input to access files
+    const fileName = req.query.file;
+    fs.readFile('/data/safe/' + fileName, (err, data) => { res.send(data); });
+    
+    // CODE INJECTION: eval() is a high-priority vulnerability
+    eval(req.query.cmd); 
 });
 
-// hotspot: exposing secret
-app.get('/config', (req, res) => {
-  res.json({
-    apiKey: API_KEY,
-    adminPassword: ADMIN_PASSWORD
-  });
-});
+// --- 2. SECURITY HOTSPOTS ---
+// These are often shown in a separate "Hotspots" tab, not the main "Vulnerabilities" list
+const weakHash = crypto.createHash('md5').update('sensitive').digest('hex'); 
+const hardcodedPassword = "AdminPassword123!"; 
 
-// hotspot: weak hash
-app.get('/hash', (req, res) => {
-  const input = req.query.input || 'test';
-  const hash = crypto.createHash('md5').update(input).digest('hex');
-  res.send(hash);
-});
+// --- 3. RELIABILITY (Bugs) ---
+function getStatus(val) {
+    if (val === 1) {
+        return "Active";
+        console.log("Dead code"); // Bug: Unreachable
+    }
+    // Bug: Path with no return
+}
 
-// hotspot: weak random
-app.get('/token', (req, res) => {
-  const token = Math.random().toString(36).substring(2);
-  res.send(token);
-});
+// --- 4. MAINTAINABILITY (Code Smells) ---
+const unused = "delete me"; 
+function complex() { if(1){ if(2){ if(3){ if(4){ console.log("Too deep"); } } } } }
 
-// hotspot: reflected html
-app.get('/search', (req, res) => {
-  const q = req.query.q || '';
-  res.send('<h1>Result: ' + q + '</h1>');
-});
+// --- 5. DUPLICATION ---
+// Block 1
+function syncDataA() {
+    console.log("Syncing...");
+    let x = 10; let y = 20; let z = x + y;
+    console.log("Result is: " + z);
+    return z;
+}
+// Block 2 (Exact Duplicate)
+function syncDataB() {
+    console.log("Syncing...");
+    let x = 10; let y = 20; let z = x + y;
+    console.log("Result is: " + z);
+    return z;
+}
 
-app.listen(3000, () => {
-  console.log('App running on port 3000');
-});
+app.listen(3000);
