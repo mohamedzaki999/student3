@@ -1,6 +1,6 @@
 nano package.json
 {
-  "name": "devsecops-demo",
+  "name": "student3",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
