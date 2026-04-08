@@ -1,12 +1,13 @@
 {
   "name": "student3",
   "version": "1.0.0",
-  "description": "Training app for SonarQube demo",
+  "description": "Simple SonarQube demo project",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "4.16.0"
+    "express": "4.16.0",
+    "axios": "0.18.0"
   }
 }

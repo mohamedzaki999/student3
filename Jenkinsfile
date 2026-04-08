@@ -5,7 +5,7 @@ pipeline {
         PROJECT_KEY    = 'student3'
         PROJECT_NAME   = 'student3'
         IMAGE_NAME     = 'student3'
-        CONTAINER_NAME = 'student3'
+        CONTAINER_NAME = 'student3-app'
         APP_PORT       = '3005'
         SONAR_HOST_URL = 'http://192.168.119.129:9000'
     }
@@ -33,7 +33,6 @@ pipeline {
         stage('Snyk Scan') {
             steps {
                 sh 'npm audit --audit-level=low || true'
-                echo 'Snyk scan stage placeholder'
             }
         }
 
@@ -76,30 +75,6 @@ pipeline {
                 sh 'docker rm -f ${CONTAINER_NAME} || true'
                 sh 'docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:3000 ${IMAGE_NAME}:latest'
             }
-        }
-
-        stage('ZAP Scan') {
-            steps {
-                echo 'ZAP scan stage'
-            }
-        }
-
-        stage('Kubernetes Deploy') {
-            steps {
-                echo 'Kubernetes deploy stage'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline finished successfully.'
-        }
-        failure {
-            echo 'Pipeline failed. Review SonarQube and Jenkins logs.'
-        }
-        always {
-            echo 'Pipeline ended.'
         }
     }
 }
